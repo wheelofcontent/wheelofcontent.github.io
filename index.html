@@ -1,0 +1,186 @@
+<!--
+    Winhweel.js wheel of fortune example by Douglas McKechie @ www.dougtesting.net
+    See website for tutorials and other documentation.
+
+    The MIT License (MIT)
+
+    Copyright (c) 2016 Douglas McKechie
+
+    Permission is hereby granted, free of charge, to any person obtaining a copy
+    of this software and associated documentation files (the "Software"), to deal
+    in the Software without restriction, including without limitation the rights
+    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+    copies of the Software, and to permit persons to whom the Software is
+    furnished to do so, subject to the following conditions:
+
+    The above copyright notice and this permission notice shall be included in all
+    copies or substantial portions of the Software.
+
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+    SOFTWARE.
+-->
+<html>
+    <head>
+        <title>Wheel of Content</title>
+        <link rel="stylesheet" href="main.css" type="text/css" />
+        <script type="text/javascript" src="Winwheel.js"></script>
+        <script src="http://cdnjs.cloudflare.com/ajax/libs/gsap/latest/TweenMax.min.js"></script>
+    </head>
+    <body>
+        <div align="center">           
+            <br />
+            <table cellpadding="0" cellspacing="0" border="0">
+            <tr>
+                <td>
+                    <div class="power_controls">
+                        <br />
+                        <br />                        
+                        <br />
+                        <img id="spin_button" src="spin_off.png" alt="Spin" onClick="startSpin();" />
+                        <br /><br />
+                        &nbsp;&nbsp;<a href="#" onClick="resetWheel(); return false;">Play Again</a><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(reset)
+                    </div>
+                </td>
+                <td width="438" height="582" class="the_wheel" align="center" valign="center">
+                    <canvas id="canvas" width="434" height="434">
+                        <p style="{color: white}" align="center">Sorry, your browser doesn't the Wheel of Content. Please try another.</p>
+                    </canvas>
+                <td>
+					<div class="spin_result">
+					   <table class="result" cellpadding="10" cellspacing="0">
+							<tr>
+								<th align="center">Result</th>
+							</tr>
+							<tr>
+								<td width="150" align="center" id="rst"></td>
+							</tr>						
+						</table>
+					<div/>
+                </td>
+				
+            </tr>
+			</table>
+        <script>
+            // Create new wheel object specifying the parameters at creation time.
+            let theWheel = new Winwheel({
+                'outerRadius'     : 212,        // Set outer radius so wheel fits inside the background.
+                'innerRadius'     : 75,         // Make wheel hollow so segments don't go all way to center.
+                'textFontSize'    : 24,         // Set default font size for the segments.
+                'textOrientation' : 'horizontal', // Make text vertial so goes down from the outside of wheel.
+                'textAlignment'   : 'center',    // Align text to outside of wheel.
+                'numSegments'     : 24,         // Specify number of segments.
+                'segments'        :             // Define segments including colour and text.
+                [                               // font size and test colour overridden on backrupt segments.
+                   {'fillStyle' : '#ee1c24', 'text' : 'Give 5 Subs', 'textFontSize' : 12},
+                   {'fillStyle' : '#3cb878', 'text' : 'Receive 5 Subs', 'textFontSize' : 11},
+                   {'fillStyle' : '#f6989d', 'text' : 'Receive 10 Subs', 'textFontSize' : 11},
+                   {'fillStyle' : '#00aef0', 'text' : 'Give 5 Subs', 'textFontSize' : 12},
+                   {'fillStyle' : '#f26522', 'text' : 'Twitch Prime', 'textFontSize' : 14},
+                   {'fillStyle' : '#000000', 'text' : 'Pool', 'textFontSize' : 16, 'textFillStyle' : '#ffffff'},
+                   {'fillStyle' : '#e70697', 'text' : 'Give 15 Subs', 'textFontSize' : 12},
+                   {'fillStyle' : '#fff200', 'text' : 'Give 10 Subs', 'textFontSize' : 12},
+                   {'fillStyle' : '#f6989d', 'text' : 'Receive 10 Subs', 'textFontSize' : 11},
+                   {'fillStyle' : '#ee1c24', 'text' : 'Give 5 Subs', 'textFontSize' : 12},
+                   {'fillStyle' : '#3cb878', 'text' : 'Receive 5 Subs', 'textFontSize' : 11},
+                   {'fillStyle' : '#f26522', 'text' : 'Twitch Prime', 'textFontSize' : 14},
+                   {'fillStyle' : '#a186be', 'text' : '1 Free Reroll', 'textFontSize' : 16},
+                   {'fillStyle' : '#fff200', 'text' : 'Give 10 Subs', 'textFontSize' : 12},
+                   {'fillStyle' : '#00aef0', 'text' : 'Give 5 Subs', 'textFontSize' : 12},
+                   {'fillStyle' : '#ee1c24', 'text' : 'Give 5 subs', 'textFontSize' : 12},
+                   {'fillStyle' : '#f6989d', 'text' : 'Receive 10 Subs', 'textFontSize' : 11},
+                   {'fillStyle' : '#f26522', 'text' : 'Twitch Prime', 'textFontSize' : 14},
+                   {'fillStyle' : '#3cb878', 'text' : 'Receive 5 Subs', 'textFontSize' : 11},
+                   {'fillStyle' : '#000000', 'text' : 'Pool', 'textFontSize' : 16, 'textFillStyle' : '#ffffff'},
+                   {'fillStyle' : '#a186be', 'text' : '1 Free Reroll', 'textFontSize' : 16},
+                   {'fillStyle' : '#fff200', 'text' : 'Give 10 Subs', 'textFontSize' : 12},
+                   {'fillStyle' : '#00aef0', 'text' : 'Give 5 Subs', 'textFontSize' : 12},
+                   {'fillStyle' : '#ffffff', 'text' : 'Respin', 'textFontSize' : 16}
+                ],
+                'animation' :           // Specify the animation to use.
+                {
+                    'type'     : 'spinToStop',
+                    'duration' : 10,    // Duration in seconds.
+                    'spins'    : 3,     // Default number of complete spins.
+					'callbackFinished' : showResult,
+                    'callbackSound'    : playSound,   // Function to call when the tick sound is to be triggered.
+                    'soundTrigger'     : 'pin'        // Specify pins are to trigger the sound, the other option is 'segment'.
+                },
+                'pins' :				// Turn pins on.
+                {
+                    'number'     : 24,
+                    'fillStyle'  : 'silver',
+                    'outerRadius': 4,
+                }
+            });
+
+            // Loads the tick audio sound in to an audio object.
+            let audio = new Audio('tick.mp3');
+
+            // This function is called when the sound is to be played.
+            function playSound()
+            {
+                // Stop and rewind the sound if it already happens to be playing.
+                audio.pause();
+                audio.currentTime = 0;
+
+                // Play the sound.
+                audio.play();
+            }
+
+            // Vars used by the code in this page to do power controls.
+            let wheelSpinning = false;
+			
+			resetWheel();
+
+            // -------------------------------------------------------
+            // Click handler for spin button.
+            // -------------------------------------------------------
+            function startSpin()
+            {
+                // Ensure that spinning can't be clicked again while already running.
+                if (wheelSpinning == false) {
+                    theWheel.animation.spins = 10;
+					
+                    // Disable the spin button so can't click again while wheel is spinning.
+                    document.getElementById('spin_button').src       = "spin_off.png";
+                    document.getElementById('spin_button').className = "";
+
+                    // Begin the spin animation by calling startAnimation on the wheel object.
+                    theWheel.startAnimation();
+
+                    // Set to true so that power can't be changed and spin button re-enabled during
+                    // the current animation. The user will have to reset before spinning again.
+                    wheelSpinning = true;
+                }
+            }
+
+            // -------------------------------------------------------
+            // Function for reset button.
+            // -------------------------------------------------------
+            function resetWheel()
+            {
+			document.getElementById('rst').innerHTML = "";
+				document.getElementById('spin_button').src = "spin_on.png";
+				document.getElementById('spin_button').className = "clickable";
+                theWheel.stopAnimation(false);  // Stop the animation, false as param so does not call callback function.
+                theWheel.rotationAngle = 0;     // Re-set the wheel angle to 0 degrees.
+                theWheel.draw();                // Call draw to render changes to the wheel.
+                wheelSpinning = false;          // Reset to false to power buttons and spin can be clicked again.
+            }
+			
+			// -------------------------------------------------------
+            // Called when the spin animation has finished by the callback feature of the wheel because I specified callback in the parameters.
+            // -------------------------------------------------------
+            function showResult(indicatedSegment)
+            {
+                // Just display the result to the user.
+                document.getElementById('rst').innerHTML = indicatedSegment.text;
+            }
+        </script>
+    </body>
+</html>
